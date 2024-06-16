@@ -1,4 +1,4 @@
-import { assert } from "@std/assert";
+import { assert } from "jsr:@std/assert";
 import { transformTypeScript } from "./data/mod_bench.js";
 import { parseParamNamesFromFunction } from "./mod.ts";
 
