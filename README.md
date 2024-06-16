@@ -11,6 +11,39 @@
 
 Sometimes, admittedly not very often, you might want to know the names of function arguments at runtime. It is used in `@bcheidemann/tracing` to enable the `@instrument(skip('arg'))` syntax for methods.
 
+## Installation
+
+### Deno
+
+```sh
+deno add @bcheidemann/parse-params
+```
+
+### Node
+
+The package is published to [JSR](https://jsr.io/@bcheidemann/parse-params), a new package registry for TypeScript. To install JSR packages for Node, you need to use the `jsr` CLI. After installing it, it will behave just like any other Node module.
+
+```sh
+# npm
+npx jsr add @bcheidemann/parse-params
+```
+
+```sh
+# yarn
+yarn dlx jsr add @bcheidemann/parse-params
+```
+
+```sh
+# pnpm
+pnpm dlx jsr add @bcheidemann/parse-params
+```
+
+### Bun
+
+```sh
+bunx jsr add @bcheidemann/parse-params
+```
+
 ## Usage
 
 ```ts
