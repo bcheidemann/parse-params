@@ -1,5 +1,8 @@
 # parse-params
 
+[![JSR](https://jsr.io/badges/@bcheidemann/parse-params)](https://jsr.io/@bcheidemann/parse-params)
+![publish workflow](https://github.com/bcheidemann/parse-params/actions/workflows/publish.yml/badge.svg)
+
 ## Overview
 
 `@bcheidemann/parse-params` is a pure JavaScript runtime function parser, which lists the names of function parameters. It uses [`acorn`](https://github.com/acornjs/acorn) (a "tiny, fast JavaScript parser, written completely in JavaScript") under the hood to parse out the function parameters from stringified function references. It supports anonymous and named functions, async and sync, arrow functions, and class methods. It does not currently support constructors.
