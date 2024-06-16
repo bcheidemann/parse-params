@@ -8,6 +8,19 @@
 
 Sometimes, admittedly not very often, you might want to know the names of function arguments at runtime. It is used in `@bcheidemann/tracing` to enable the `@instrument(skip('arg'))` syntax for methods.
 
+## Usage
+
+```ts
+import { assertEquals } from "@std/assert";
+import { parseParamNamesFromFunction } from "@bcheidemann/parse-params";
+
+function example(arg0: string) {}
+
+const params = parseParamNamesFromFunction(example);
+
+assertEquals(params[0], "arg0");
+```
+
 ## Limitations
 
 Thanks to [`acorn`](https://github.com/acornjs/acorn), `@bcheidemann/parse-params` doesn't have a lot of the same limitations as seen in many of the usual regular expression based implementations. For instance, the arrow function expression `(arg0 = (() => { return { val: 43} })(), arg1) => (arg0.val + arg1.val)` would cause significant issues for regex based implementations, due to the inclusion of arbitrary JavaScript syntax within the function params. This is no problem for `@bcheidemann/parse-params`!
