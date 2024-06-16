@@ -21,7 +21,7 @@ import { assert } from "@std/assert";
  */
 export function parseParamNamesFromFunction(
   // deno-lint-ignore no-explicit-any
-  fn: (...args: any[]) => unknown,
+  fn: (...args: any[]) => any,
 ): string[] {
   const fnStr = fn.toString();
   return parseParamNamesFromString(fnStr);
