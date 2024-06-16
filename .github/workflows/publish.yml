@@ -20,7 +20,12 @@ jobs:
             os: ubuntu-latest
             canary: true
     steps:
-      - run: deno test
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
+      - name: Test
+        run: deno test
 
   publish:
     needs: test
