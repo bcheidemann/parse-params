@@ -57,6 +57,12 @@ const params = parseParamNamesFromFunction(example);
 assertEquals(params[0], "arg0");
 ```
 
+## Options
+
+| Option                                        | Default | Description |
+|-----------------------------------------------|---------|-------------|
+| returnIdentifierForParamAssignmentExpressions | `false` | If true, the identifier for assignment expressions will be returned, instead of the entire parameter expression. |
+
 ## Limitations
 
 Thanks to [`acorn`](https://github.com/acornjs/acorn), `@bcheidemann/parse-params` doesn't have a lot of the same limitations as seen in many of the usual regular expression based implementations. For instance, the arrow function expression `(arg0 = (() => { return { val: 43} })(), arg1) => (arg0.val + arg1.val)` would cause significant issues for regex based implementations, due to the inclusion of arbitrary JavaScript syntax within the function params. This is no problem for `@bcheidemann/parse-params`!
@@ -74,7 +80,3 @@ Different JavaScript runtimes (in particularl those using different engines) are
 ### [native code]
 
 Currently, `@bcheidemann/parse-params` does not support parsing functions with native implementations. For example, in chrome, the `console.log` function is stringified as `function log() { [native code] }`. Since the `[native code]` in the function body is not valid JavaScript, `acorn` cannot make sense of this, and the parsing will fail. We are considering switching the parser from `acorn` to [`acorn-loose`](https://github.com/acornjs/acorn/tree/master/acorn-loose/) (the error-tollerant implementation of `acorn`) but this comes with various tradeoffs, such as a slightly increased bundle size.
-
-### Parameter names
-
-Currently, parameter names are returned in full. For example, `(arg0 = 42) => {}` would return the param name `arg0 = 42`, not `arg0`. This may or may not be desirable depending on your use case, and we may add an option to ignore default values for parameters in future.

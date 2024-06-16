@@ -2,8 +2,46 @@ import { parse, type Pattern } from "acorn";
 import { assert } from "@std/assert";
 
 /**
+ * Options for `parseParamNamesFromString` and `parseParamNamesFromFunction`.
+ */
+export type Options = {
+  /**
+   * If true, the identifier for assignment expressions will be returned, instead of the entire parameter expression.
+   *
+   * @example With `returnIdentifierForParamAssignmentExpressions` set to `true`:
+   * ```ts
+   * import { assertEquals } from "@std/assert";
+   * import { parseParamNamesFromString } from "@bcheidemann/parse-params";
+   *
+   * const params = parseParamNamesFromString(
+   *   "function example(arg0 = 'default') {}",
+   *   { returnIdentifierForParamAssignmentExpressions: true }
+   * );
+   *
+   * assertEquals(params[0], "arg0");
+   * ```
+   *
+   * @example With `returnIdentifierForParamAssignmentExpressions` set to `false`:
+   * ```ts
+   * import { assertEquals } from "@std/assert";
+   * import { parseParamNamesFromString } from "@bcheidemann/parse-params";
+   *
+   * const params = parseParamNamesFromString(
+   *   "function example(arg0 = 'default') {}",
+   *   { returnIdentifierForParamAssignmentExpressions: false },
+   * );
+   *
+   * assertEquals(params[0], "arg0 = 'default'");
+   * ```
+   *
+   * @default false
+   */
+  returnIdentifierForParamAssignmentExpressions?: boolean;
+};
+
+/**
  * Parses the parameters for the provided function reference.
- * 
+ *
  * @example
  * ```ts
  * import { assertEquals } from "@std/assert";
@@ -15,16 +53,17 @@ import { assert } from "@std/assert";
  *
  * assertEquals(params[0], "arg0");
  * ```
- * 
+ *
  * @param fn The function for which to parse the parameters
  * @returns Array of stringified parameters
  */
 export function parseParamNamesFromFunction(
   // deno-lint-ignore no-explicit-any
   fn: (...args: any[]) => any,
+  options?: Options,
 ): string[] {
   const fnStr = fn.toString();
-  return parseParamNamesFromString(fnStr);
+  return parseParamNamesFromString(fnStr, options);
 }
 
 const ANONYMOUS_SYNC_FUNCTION_REGEX = /^function\s*\(/g;
@@ -34,7 +73,7 @@ const ASYNC_METHOD_REGEX = /^async [\w$]+\(/g;
 
 /**
  * Parses the parameters for the provided stringified function.
- * 
+ *
  * @example
  * ```ts
  * import { assertEquals } from "@std/assert";
@@ -46,11 +85,14 @@ const ASYNC_METHOD_REGEX = /^async [\w$]+\(/g;
  *
  * assertEquals(params[0], "arg0");
  * ```
- * 
+ *
  * @param fn The stringified function for which to parse the parameters
  * @returns Array of stringified parameters
  */
-export function parseParamNamesFromString(fn: string): string[] {
+export function parseParamNamesFromString(
+  fn: string,
+  options?: Options,
+): string[] {
   if (ANONYMOUS_SYNC_FUNCTION_REGEX.test(fn)) {
     fn = fn.replace(ANONYMOUS_SYNC_FUNCTION_REGEX, "function fn(");
   } else if (ANONYMOUS_ASYNC_FUNCTION_REGEX.test(fn)) {
@@ -86,6 +128,25 @@ export function parseParamNamesFromString(fn: string): string[] {
   return mapParams(statement.expression.params);
 
   function mapParams(params: Pattern[]) {
-    return params.map(({ start, end }) => fn.substring(start, end));
+    return params.map((param) => {
+      const { start, end } = param;
+      switch (param.type) {
+        case "AssignmentPattern":
+          if (
+            options?.returnIdentifierForParamAssignmentExpressions &&
+            param.left.type === "Identifier"
+          ) {
+            return param.left.name;
+          }
+          return fn.substring(start, end);
+        case "ArrayPattern":
+        case "MemberExpression":
+        case "ObjectPattern":
+        case "RestElement":
+          return fn.substring(start, end);
+        case "Identifier":
+          return param.name;
+      }
+    });
   }
 }

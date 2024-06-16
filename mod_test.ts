@@ -337,4 +337,17 @@ describe("parseParamNamesFromFunction", () => {
     // Assert
     assertEquals(params[0], "_arg0");
   });
+
+  it("should respect the returnIdentifierForParamAssignmentExpressions option", () => {
+    // Arrange
+    const fn = function (_arg0 = 42) {};
+
+    // Act
+    const params = parseParamNamesFromFunction(fn, {
+      returnIdentifierForParamAssignmentExpressions: true,
+    });
+
+    // Assert
+    assertEquals(params[0], "_arg0");
+  })
 });
