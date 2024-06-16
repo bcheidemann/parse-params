@@ -1,0 +1,65 @@
+{
+  "version": "3",
+  "packages": {
+    "specifiers": {
+      "jsr:@std/assert@0.226.0": "jsr:@std/assert@0.226.0",
+      "jsr:@std/assert@1.0.0-rc.1": "jsr:@std/assert@1.0.0-rc.1",
+      "jsr:@std/fmt@^0.225.4": "jsr:@std/fmt@0.225.4",
+      "jsr:@std/fs@^0.229.2": "jsr:@std/fs@0.229.3",
+      "jsr:@std/internal@^1.0.0": "jsr:@std/internal@1.0.0",
+      "jsr:@std/path@1.0.0-rc.1": "jsr:@std/path@1.0.0-rc.1",
+      "jsr:@std/testing@0.225.1": "jsr:@std/testing@0.225.1",
+      "npm:acorn@8.12.0": "npm:acorn@8.12.0"
+    },
+    "jsr": {
+      "@std/assert@0.226.0": {
+        "integrity": "0dfb5f7c7723c18cec118e080fec76ce15b4c31154b15ad2bd74822603ef75b3",
+        "dependencies": [
+          "jsr:@std/internal@^1.0.0"
+        ]
+      },
+      "@std/assert@1.0.0-rc.1": {
+        "integrity": "f2f1f1d5b5eab3a2165744996c42b3c501688d887a015067e12267fe5e6fb804"
+      },
+      "@std/fmt@0.225.4": {
+        "integrity": "584c681cf422b70e28959b57e59012823609c087384cbf12d05f67814797fda3"
+      },
+      "@std/fs@0.229.3": {
+        "integrity": "783bca21f24da92e04c3893c9e79653227ab016c48e96b3078377ebd5222e6eb",
+        "dependencies": [
+          "jsr:@std/path@1.0.0-rc.1"
+        ]
+      },
+      "@std/internal@1.0.0": {
+        "integrity": "ac6a6dfebf838582c4b4f61a6907374e27e05bedb6ce276e0f1608fe84e7cd9a"
+      },
+      "@std/path@1.0.0-rc.1": {
+        "integrity": "b8c00ae2f19106a6bb7cbf1ab9be52aa70de1605daeb2dbdc4f87a7cbaf10ff6"
+      },
+      "@std/testing@0.225.1": {
+        "integrity": "1a11119553fc33410abe8566731ae513c53e73db040cedbf901858fbd7587819",
+        "dependencies": [
+          "jsr:@std/assert@1.0.0-rc.1",
+          "jsr:@std/fmt@^0.225.4",
+          "jsr:@std/fs@^0.229.2",
+          "jsr:@std/internal@^1.0.0",
+          "jsr:@std/path@1.0.0-rc.1"
+        ]
+      }
+    },
+    "npm": {
+      "acorn@8.12.0": {
+        "integrity": "sha512-RTvkC4w+KNXrM39/lWCUaG0IbRkWdCv7W/IOW9oU6SawyxulvkQy5HQPVTKxEjczcUvapcrw3cFx/60VN/NRNw==",
+        "dependencies": {}
+      }
+    }
+  },
+  "remote": {},
+  "workspace": {
+    "dependencies": [
+      "jsr:@std/assert@0.226.0",
+      "jsr:@std/testing@0.225.1",
+      "npm:acorn@8.12.0"
+    ]
+  }
+}
