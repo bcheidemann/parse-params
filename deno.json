@@ -1,4 +1,7 @@
 {
+  "name": "@bcheidemann/parse-params",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
   "tasks": {},
   "imports": {
     "@std/assert": "jsr:@std/assert@0.226.0",
