@@ -1,6 +1,7 @@
 # parse-params
 
 [![JSR](https://jsr.io/badges/@bcheidemann/parse-params)](https://jsr.io/@bcheidemann/parse-params)
+[![JSR Score](https://jsr.io/badges/@bcheidemann/parse-params/score)](https://jsr.io/@bcheidemann/parse-params)
 ![publish workflow](https://github.com/bcheidemann/parse-params/actions/workflows/publish.yml/badge.svg)
 
 ## Overview
