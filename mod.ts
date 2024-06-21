@@ -132,7 +132,20 @@ export function parseParamNamesFromString(
 ): string[] {
   const params = parseParamNodesFromString(fn);
 
-  return params.map((param) => {
+  return params.map((param) => paramNodeToParamName(param, options));
+}
+
+/**
+ * Converts a function parameter node into it's name.
+ * 
+ * @param param The parameter node
+ * @param options
+ * @returns The parameter name
+ */
+export function paramNodeToParamName(
+  param: ParamNode,
+  options?: Options,
+): string {
     switch (param.type) {
       case "AssignmentPattern":
         if (
@@ -155,7 +168,6 @@ export function parseParamNamesFromString(
         // deno-lint-ignore no-explicit-any
         throw new AssertionError("Unexpected param type: " + (param as any).type);
     }
-  });
 }
 
 /**
