@@ -1,5 +1,6 @@
 import { parse, type Pattern } from "acorn";
-import { assert } from "@std/assert";
+import { AssertionError, assert } from "@std/assert";
+import type { DeepOmit } from "./src/utils/deepOmit.ts";
 
 /**
  * Options for `parseParamNamesFromString` and `parseParamNamesFromFunction`.
@@ -37,6 +38,16 @@ export type Options = {
    * @default false
    */
   returnIdentifierForParamAssignmentExpressions?: boolean;
+};
+
+/**
+ * The parameter node 
+ */
+export type ParamNode = DeepOmit<Pattern, "start" | "end" | "range" | "loc"> & {
+  /**
+   * The raw text of the parameter.
+   */
+  rawText: string;
 };
 
 /**
@@ -87,7 +98,7 @@ export function parseParamNamesFromFunction(
 export function parseParamNodesFromFunction(
   // deno-lint-ignore no-explicit-any
   fn: (...args: any[]) => any,
-): Pattern[] {
+): ParamNode[] {
   const fnStr = fn.toString();
   return parseParamNodesFromString(fnStr);
 }
@@ -121,30 +132,30 @@ export function parseParamNamesFromString(
 ): string[] {
   const params = parseParamNodesFromString(fn);
 
-  return mapParams(params);
-
-  function mapParams(params: Pattern[]) {
-    return params.map((param) => {
-      const { start, end } = param;
-      switch (param.type) {
-        case "AssignmentPattern":
-          if (
-            options?.returnIdentifierForParamAssignmentExpressions &&
-            param.left.type === "Identifier"
-          ) {
-            return param.left.name;
-          }
-          return fn.substring(start, end);
-        case "ArrayPattern":
-        case "MemberExpression":
-        case "ObjectPattern":
-        case "RestElement":
-          return fn.substring(start, end);
-        case "Identifier":
-          return param.name;
-      }
-    });
-  }
+  return params.map((param) => {
+    switch (param.type) {
+      case "AssignmentPattern":
+        if (
+          options?.returnIdentifierForParamAssignmentExpressions &&
+          param.left.type === "Identifier"
+        ) {
+          return param.left.name;
+        }
+        return param.rawText;
+      case "ArrayPattern":
+      case "MemberExpression":
+      case "ObjectPattern":
+      case "RestElement":
+        return param.rawText;
+      case "Identifier":
+        return param.name;
+      // deno-lint-ignore no-case-declarations
+      default:
+        const _: never = param;
+        // deno-lint-ignore no-explicit-any
+        throw new AssertionError("Unexpected param type: " + (param as any).type);
+    }
+  });
 }
 
 /**
@@ -167,7 +178,7 @@ export function parseParamNamesFromString(
  */
 export function parseParamNodesFromString(
   fn: string,
-): Pattern[] {
+): ParamNode[] {
   if (ANONYMOUS_SYNC_FUNCTION_REGEX.test(fn)) {
     fn = fn.replace(ANONYMOUS_SYNC_FUNCTION_REGEX, "function fn(");
   } else if (ANONYMOUS_ASYNC_FUNCTION_REGEX.test(fn)) {
@@ -187,7 +198,7 @@ export function parseParamNodesFromString(
   const statement = program.body[0];
 
   if (statement.type === "FunctionDeclaration") {
-    return statement.params;
+    return mapPatternsToParamNodes(fn, statement.params);
   }
 
   assert(
@@ -200,5 +211,15 @@ export function parseParamNodesFromString(
     `Expected ArrowFunctionExpression but received ${statement.expression.type}`,
   );
 
-  return statement.expression.params;
+  return mapPatternsToParamNodes(fn, statement.expression.params);
+}
+
+function mapPatternsToParamNodes(fn: string, params: Pattern[]): ParamNode[] {
+  return params.map((param) => {
+    const rawText = fn.substring(param.start, param.end);
+    return {
+      ...param,
+      rawText,
+    };
+  });
 }
