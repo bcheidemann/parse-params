@@ -1,5 +1,5 @@
 import { parse, type Pattern } from "acorn";
-import { AssertionError, assert } from "@std/assert";
+import { assert, AssertionError } from "@std/assert";
 import type { DeepOmit } from "./src/utils/deepOmit.ts";
 
 /**
@@ -41,7 +41,7 @@ export type Options = {
 };
 
 /**
- * The parameter node 
+ * The parameter node
  */
 export type ParamNode = DeepOmit<Pattern, "start" | "end" | "range" | "loc"> & {
   /**
@@ -137,7 +137,7 @@ export function parseParamNamesFromString(
 
 /**
  * Converts a function parameter node into it's name.
- * 
+ *
  * @param param The parameter node
  * @param options
  * @returns The parameter name
@@ -146,28 +146,28 @@ export function paramNodeToParamName(
   param: ParamNode,
   options?: Options,
 ): string {
-    switch (param.type) {
-      case "AssignmentPattern":
-        if (
-          options?.returnIdentifierForParamAssignmentExpressions &&
-          param.left.type === "Identifier"
-        ) {
-          return param.left.name;
-        }
-        return param.rawText;
-      case "ArrayPattern":
-      case "MemberExpression":
-      case "ObjectPattern":
-      case "RestElement":
-        return param.rawText;
-      case "Identifier":
-        return param.name;
-      // deno-lint-ignore no-case-declarations
-      default:
-        const _: never = param;
-        // deno-lint-ignore no-explicit-any
-        throw new AssertionError("Unexpected param type: " + (param as any).type);
-    }
+  switch (param.type) {
+    case "AssignmentPattern":
+      if (
+        options?.returnIdentifierForParamAssignmentExpressions &&
+        param.left.type === "Identifier"
+      ) {
+        return param.left.name;
+      }
+      return param.rawText;
+    case "ArrayPattern":
+    case "MemberExpression":
+    case "ObjectPattern":
+    case "RestElement":
+      return param.rawText;
+    case "Identifier":
+      return param.name;
+    // deno-lint-ignore no-case-declarations
+    default:
+      const _: never = param;
+      // deno-lint-ignore no-explicit-any
+      throw new AssertionError("Unexpected param type: " + (param as any).type);
+  }
 }
 
 /**
