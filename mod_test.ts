@@ -236,11 +236,14 @@ describe("parseParamNamesFromFunction", () => {
     const params = parseParamNamesFromFunction(fn);
 
     // Assert
-    assertEquals(params[0], `arg0 = (()=>{
+    assertEquals(
+      params[0],
+      `arg0 = (()=>{
       return {
         val: 43
       };
-    })()`);
+    })()`,
+    );
     assertEquals(params[1], "arg1");
   });
 
@@ -349,5 +352,5 @@ describe("parseParamNamesFromFunction", () => {
 
     // Assert
     assertEquals(params[0], "_arg0");
-  })
+  });
 });
