@@ -1,6 +1,6 @@
 import { parse, type Pattern } from "acorn";
-import { assert, AssertionError } from "@std/assert";
 import type { DeepOmit } from "./src/utils/deepOmit.ts";
+import { assert, AssertionError } from "./src/utils/assert.ts";
 
 /**
  * Options for `parseParamNamesFromString` and `parseParamNamesFromFunction`.
